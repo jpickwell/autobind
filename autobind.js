@@ -1,21 +1,26 @@
-module.exports = function autobind(self)
+module.exports = function autobind(self, _proto)
 {
-  _autobind(self, self.constructor.prototype);
-}
+  var key, parentProto, proto;
 
-function _autobind(self, proto)
-{
-  for(var key of Object.getOwnPropertyNames(proto))
+  proto = _proto;
+  if(proto == null)
   {
-    if(key !== 'constructor')
-    {
-      self[key] = self[key].bind(self);
-    }
+    proto = self.constructor.prototype;
   }
 
-  var parentProto = Object.getPrototypeOf(proto);
+  for(key of Object.getOwnPropertyNames(proto))
+  {
+    if(key === 'constructor')
+    {
+      continue;
+    }
+
+    self[key] = self[key].bind(self);
+  }
+
+  parentProto = Reflect.getPrototypeOf(proto);
   if(parentProto !== Object.prototype)
   {
-    _autobind(self, parentProto);
+    autobind(self, parentProto);
   }
 }
