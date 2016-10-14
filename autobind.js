@@ -10,7 +10,7 @@ module.exports = function autobind(self, _proto)
 
   for(key of Object.getOwnPropertyNames(proto))
   {
-    if(key === 'constructor')
+    if(key === 'constructor' || typeof self[key] !== 'function')
     {
       continue;
     }
